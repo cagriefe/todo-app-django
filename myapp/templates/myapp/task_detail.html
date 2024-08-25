@@ -1,0 +1,24 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2>Task Details</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ task.title }}</h5>
+            <p class="card-text">{{ task.description }}</p>
+            <p class="card-text">
+                {% if task.completed %}
+                    <span class="badge bg-success">Completed</span>
+                {% else %}
+                    <span class="badge bg-warning">Pending</span>
+                {% endif %}
+            </p>
+            <p class="card-text"><small>Due: {{ task.due_at|date:"F j, Y, g:i a" }}</small></p>
+            <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'myapp:add_task' %}" class="btn btn-success">Add Task</a> <!-- Add this line -->
+        </div>
+    </div>
+</div>
+{% endblock content %}

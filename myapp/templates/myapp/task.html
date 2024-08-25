@@ -1,0 +1,72 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2>Task Details</h2>
+    
+    <!-- Displaying Task Details -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ task.title }}</h5>
+            <p class="card-text">{{ task.description }}</p>
+            <p class="card-text">
+                {% if task.completed %}
+                    <span class="badge bg-success">Completed</span>
+                {% else %}
+                    <span class="badge bg-warning">Pending</span>
+                {% endif %}
+            </p>
+            <p class="card-text">
+                <small>Due: {{ task.due_at|date:"F j, Y, g:i a" }}</small>
+            </p>
+            <p class="card-text">
+                <small>Priority: {{ task.get_priority_display }}</small>
+            </p>
+            {% if task.parent_task %}
+                <p class="card-text">
+                    <small>Parent Task: {{ task.parent_task.title }}</small>
+                </p>
+            {% endif %}
+            <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+
+    <!-- Form for Adding New Task -->
+    <h2>Add New Task</h2>
+    <form method="post" action="{% url 'myapp:add_task' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="due_at">Due Date:</label>
+            <input type="datetime-local" class="form-control" id="due_at" name="due_at">
+        </div>
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select class="form-control" id="priority" name="priority">
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="parent_task">Parent Task (optional):</label>
+            <select class="form-control" id="parent_task" name="parent_task">
+                <option value="">None</option>
+                {% for p_task in parent_tasks %}
+                    <option value="{{ p_task.id }}">{{ p_task.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Add Task</button>
+    </form>
+</div>
+{% endblock content %}

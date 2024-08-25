@@ -1,0 +1,48 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container">
+    {% if user.is_authenticated %}
+    <h1>Task List</h1>
+    
+    <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3">Add Task</a> <!-- Add this line -->
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>
+                    {% if task.completed %}
+                        <span class="badge bg-success">Completed</span>
+                    {% else %}
+                        <span class="badge bg-warning">Pending</span>
+                    {% endif %}
+                </td>
+                <td>{{ task.due_at|date:"F j, Y, g:i a" }}</td>
+                <td>
+                    <a href="{% url 'myapp:task_detail' task.id %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <h1>Welcome to the TODO App</h1>
+        <a href="{% url 'myapp:login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'myapp:registration' %}" class="btn btn-secondary">Register</a>
+    {% endif %}
+</div>
+{% endblock content %}
