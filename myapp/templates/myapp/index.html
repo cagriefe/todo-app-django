@@ -1,57 +1,40 @@
 {% extends "myapp/base.html" %}
 
 {% block content %}
-<div class="container">
-    {% if user.is_authenticated %}
-    <h1 id= "index_h1" style = "text-align: center;">Task List</h1>
-    
-   
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Parent Task</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Due Date</th>
-                <th>Priority</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="container mt-5">
+    {% if tasks %}
+        <div class="row">
             {% for task in tasks %}
-            <tr>
-                <td>{{ task.parent_task }}</td>
-                <td>{{ task.title }}</td>
-                <td>{{ task.description }}</td>
-                <td>
-                    {% if task.completed %}
-                        <span class="badge bg-success">Completed</span>
-                    {% else %}
-                        <span class="badge bg-warning">Pending</span>
-                    {% endif %}
-                </td>
-                <td>{{ task.due_at|date:"F j, Y, g:i a" }}</td>
-                <td>
-                    {% if task.priority == "LOW" %}
-                        <span class="badge" style="color: black; background-color: green;">LOW</span>
-                    {% elif task.priority == "MEDIUM" %}
-                        <span class="badge" style="color: black; background-color: yellow;">MEDIUM</span>
-                    {% else %}
-                        <span class="badge" style="color: black; background-color: red;">HIGH</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'myapp:task_detail' task.id %}" class="btn btn-info btn-sm">View</a>
-                    <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary btn-sm">Edit</a>
-                    <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
+                <div class="col-md-4 mb-4">
+                    <div class="card {% if task.completed %}bg-success{% else %}bg-warning{% endif %} text-white">
+                        <div class="card-header">
+                            {{ task.title }}
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ task.description }}</p>
+                            <p class="card-text">
+                                <small>Due: {{ task.due_at|date:"F j, Y, g:i a" }}</small>
+                            </p>
+                            <p class="card-text">
+                                {% if task.priority == "LOW" %}
+                                    <span class="badge" style="background-color: green;">LOW</span>
+                                {% elif task.priority == "MEDIUM" %}
+                                    <span class="badge" style="background-color: yellow; color: black;">MEDIUM</span>
+                                {% else %}
+                                    <span class="badge" style="background-color: red; color: black;">HIGH</span>
+                                {% endif %}
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'myapp:task_detail' task.id %}" class="btn btn-info btn-sm">View</a>
+                                <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
-    <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3" id="addnewbutton">Add New Task</a> <!-- Add this line -->
+        </div>
+        <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3" id="addnewbutton">Add New Task</a>
     {% else %}
         <h1>Welcome to the TODO App</h1>
         <a href="{% url 'myapp:login' %}" class="btn btn-primary">Login</a>
