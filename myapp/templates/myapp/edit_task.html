@@ -2,11 +2,48 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1>Edit Task</h1>
-    <form method="post">
+    <h2>Edit Task</h2>
+    <form method="post" action="{% url 'myapp:edit_task' task.id %}">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary" type="submit">Save Changes</button>
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ task.title }}" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description">{{ task.description }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="due_at">Due Date:</label>
+            <input type="datetime-local" class="form-control" id="due_at" name="due_at" value="{{ task.due_at|date:'Y-m-d\TH:i' }}">
+        </div>
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select class="form-control" id="priority" name="priority">
+                <option value="LOW" {% if task.priority == 'LOW' %}selected{% endif %}>Low</option>
+                <option value="MEDIUM" {% if task.priority == 'MEDIUM' %}selected{% endif %}>Medium</option>
+                <option value="HIGH" {% if task.priority == 'HIGH' %}selected{% endif %}>High</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="parent_task">Parent Task (optional):</label>
+            <select class="form-control" id="parent_task" name="parent_task">
+                <option value="">None</option>
+                {% for p_task in parent_tasks %}
+                    <option value="{{ p_task.id }}" {% if task.parent_task and task.parent_task.id == p_task.id %}selected{% endif %}>
+                        {{ p_task.title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="completed">Status:</label>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="completed" name="completed" {% if task.completed %}checked{% endif %}>
+                <label class="form-check-label" for="completed">Completed</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
     </form>
 </div>
-{% endblock %}
+{% endblock content %}
