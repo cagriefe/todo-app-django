@@ -10,6 +10,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Parent Task</th>
                 <th>Title</th>
                 <th>Description</th>
                 <th>Status</th>
@@ -20,6 +21,7 @@
         <tbody>
             {% for task in tasks %}
             <tr>
+                <td>{{ task.parent_task }}</td>
                 <td>{{ task.title }}</td>
                 <td>{{ task.description }}</td>
                 <td>

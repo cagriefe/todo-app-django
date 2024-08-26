@@ -1,11 +1,46 @@
 {% extends "myapp/base.html" %}
-
 {% block content %}
 <div class="container mt-5">
-    <h1>Add Task</h1>
-    <form method="post">
+    <h2>Add New Task</h2>
+    <form method="post" action="{% url 'myapp:add_task' %}">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary" type="submit">Add Task</button>
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="due_at">Due Date:</label>
+            <input type="datetime-local" class="form-control" id="due_at" name="due_at">
+        </div>
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select class="form-control" id="priority" name="priority">
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="parent_task">Parent Task (optional):</label>
+            <select class="form-control" id="parent_task" name="parent_task">
+                <option value="">None</option>
+                {% for p_task in parent_tasks %}
+                    <option value="{{ p_task.id }}">{{ p_task.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Add Task</button>
     </form>
+</div>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock content %}
