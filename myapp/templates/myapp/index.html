@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container">
     {% if user.is_authenticated %}
-    <h1>Task List</h1>
+    <h1 id= "index_h1" style = "text-align: center;">Task List</h1>
     
-    <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3">Add Task</a> <!-- Add this line -->
+   
     
     <table class="table">
         <thead>
@@ -15,6 +15,7 @@
                 <th>Description</th>
                 <th>Status</th>
                 <th>Due Date</th>
+                <th>Priority</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -33,6 +34,15 @@
                 </td>
                 <td>{{ task.due_at|date:"F j, Y, g:i a" }}</td>
                 <td>
+                    {% if task.priority == "LOW" %}
+                        <span class="badge" style="color: black; background-color: green;">LOW</span>
+                    {% elif task.priority == "MEDIUM" %}
+                        <span class="badge" style="color: black; background-color: yellow;">MEDIUM</span>
+                    {% else %}
+                        <span class="badge" style="color: black; background-color: red;">HIGH</span>
+                    {% endif %}
+                </td>
+                <td>
                     <a href="{% url 'myapp:task_detail' task.id %}" class="btn btn-info btn-sm">View</a>
                     <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary btn-sm">Edit</a>
                     <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
@@ -41,6 +51,7 @@
             {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3" id="addnewbutton">Add New Task</a> <!-- Add this line -->
     {% else %}
         <h1>Welcome to the TODO App</h1>
         <a href="{% url 'myapp:login' %}" class="btn btn-primary">Login</a>
