@@ -1,39 +1,44 @@
 {% extends "myapp/base.html" %}
-
+{% load custom_filters %}
 {% block content %}
 <div class="container mt-5">
-    {% if tasks %}
-        <div class="row">
-            {% for task in tasks %}
-                <div class="col-md-4 mb-4">
-                    <div class="card {% if task.completed %}bg-success{% else %}bg-warning{% endif %} text-white">
-                        <div class="card-header">
-                            {{ task.title }}
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">{{ task.description }}</p>
-                            <p class="card-text">
-                                <small>Due: {{ task.due_at|date:"F j, Y, g:i a" }}</small>
-                            </p>
-                            <p class="card-text">
-                                {% if task.priority == "LOW" %}
-                                    <span class="badge" style="background-color: green;">LOW</span>
-                                {% elif task.priority == "MEDIUM" %}
-                                    <span class="badge" style="background-color: yellow; color: black;">MEDIUM</span>
-                                {% else %}
-                                    <span class="badge" style="background-color: red; color: black;">HIGH</span>
-                                {% endif %}
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <a href="{% url 'myapp:task_detail' task.id %}" class="btn btn-info btn-sm">View</a>
-                                <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary btn-sm">Edit</a>
-                                <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+    {% if user.is_authenticated %}
+        {% if tasks %}
+            <div class="row">
+                {% for task in tasks %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="{% if task.completed %}background-color: grey; color: white;{% else %}background-color: white; color: black;{% endif %}">
+                            <div class="card-header">
+                                <h3>{{ task.title }}</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">{{ task.description }}</p>
+                                <p class="card-text">
+                                    <small>Due: {{ task.due_at|date:"F j, Y, g:i a" }}</small>
+                                    <br><small>Time left: {{ task.due_at|time_until }}</small></br>
+                                </p>
+                                <p class="card-text">
+                                    {% if task.priority == "LOW" %}
+                                        <span class="badge" style="background-color: #b1e8fd; color : black;">LOW</span>
+                                    {% elif task.priority == "MEDIUM" %}
+                                        <span class="badge" style="background-color: #cef2ac; color: black;">MEDIUM</span>
+                                    {% else %}
+                                        <span class="badge" style="background-color: #f0440a; color: black;">HIGH</span>
+                                    {% endif %}
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'myapp:task_detail' task.id %}" class="btn btn-info btn-sm">View</a>
+                                    <a href="{% url 'myapp:edit_task' task.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                    <a href="{% url 'myapp:delete_task' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h2 style= "text-align:center; margin-bottom:3vmax;">You don't have any tasks yet.</h2>
+        {% endif %}
         <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3" id="addnewbutton">Add New Task</a>
     {% else %}
         <h1>Welcome to the TODO App</h1>
