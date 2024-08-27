@@ -10,6 +10,12 @@
                         <div class="card" style="{% if task.completed %}background-color: grey; color: white;{% else %}background-color: white; color: black;{% endif %}">
                             <div class="card-header">
                                 <h3>{{ task.title }}</h3>
+                                <p class="card-text">
+                                    {% if task.completed %}
+                                        <span class="badge" style="background-color: #f0440a; color: white;">COMPLETED</span>
+                                    {% else %}
+                                        <span class="badge" style="background-color: #b1e8fd; color: black;">PENDING</span>
+                                    {% endif %}
                             </div>
                             <div class="card-body">
                                 <p class="card-text">{{ task.description }}</p>
@@ -39,7 +45,7 @@
         {% else %}
             <h2 style= "text-align:center; margin-bottom:3vmax;">You don't have any tasks yet.</h2>
         {% endif %}
-        <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3" id="addnewbutton">Add New Task</a>
+        <a href="{% url 'myapp:add_task' %}" class="btn btn-success mb-3" id="addnewbutton" style="display: flex;justify-content: center;align-items: center;width: fit-content;margin: 0 auto;background-color: black;color: white; margin-bottom: 10; border-color: grey;">Add New Task</a>
     {% else %}
         <h1>Welcome to the TODO App</h1>
         <a href="{% url 'myapp:login' %}" class="btn btn-primary">Login</a>

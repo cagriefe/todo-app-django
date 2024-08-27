@@ -8,7 +8,7 @@ from .forms import TaskForm
 
 def index(request):
     if request.user.is_authenticated:
-        tasks = Task.objects.filter(user=request.user)
+        tasks = Task.objects.filter(user=request.user).order_by('due_at')
     else:
         tasks = Task.objects.none()  # or redirect to login page, etc.
 
