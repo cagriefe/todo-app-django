@@ -7,10 +7,13 @@ This is a simple to-do application built with Django. It allows users to create,
 ## Features
 
 - User registration and login
+![login](assets/TODO_app_login.gif)
 - Create, edit, and delete tasks
+![create_delete_edit](assets/TODOapp_edit_delete_view.gif)
 - View task details
 - Task prioritization (Low, Medium, High)
 - Display tasks with completion status
+![display](assets/TODO_app_addnewtask.gif)
 
 ## Requirements
 
